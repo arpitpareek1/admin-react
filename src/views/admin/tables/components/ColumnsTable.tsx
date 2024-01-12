@@ -20,8 +20,12 @@ type RowObj = {
 
 function ColumnsTable(props: { tableData: any }) {
   const { tableData } = props;
+  console.log("tableData", tableData.length);
+
   const [sorting, setSorting] = React.useState<SortingState>([]);
+
   let defaultData = tableData;
+
   const columns = [
     columnHelper.accessor("name", {
       id: "name",
@@ -34,6 +38,7 @@ function ColumnsTable(props: { tableData: any }) {
         </p>
       ),
     }),
+
     columnHelper.accessor("progress", {
       id: "progress",
       header: () => (
@@ -71,8 +76,11 @@ function ColumnsTable(props: { tableData: any }) {
         </p>
       ),
     }),
-  ]; // eslint-disable-next-line
-  const [data, setData] = React.useState(() => [...defaultData]);
+  ];
+
+  const [data] = React.useState(() => [...defaultData]);
+  console.log(data.length);
+
   const table = useReactTable({
     data,
     columns,
@@ -82,15 +90,15 @@ function ColumnsTable(props: { tableData: any }) {
     onSortingChange: setSorting,
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
-    debugTable: true,
+    debugTable: false,
   });
   return (
     <Card extra={"w-full pb-10 p-4 h-full"}>
       <header className="relative flex items-center justify-between">
         <div className="text-xl font-bold text-navy-700 dark:text-white">
-          4-Columns Table
+          User Table
         </div>
-        <CardMenu />
+        {/* <CardMenu /> */}
       </header>
 
       <div className="mt-8 overflow-x-scroll xl:overflow-x-hidden">
@@ -104,7 +112,7 @@ function ColumnsTable(props: { tableData: any }) {
                       key={header.id}
                       colSpan={header.colSpan}
                       onClick={header.column.getToggleSortingHandler()}
-                      className="cursor-pointer border-b-[1px] border-gray-200 pt-4 pb-2 pr-4 text-start"
+                      className="cursor-pointer border-b-[1px] border-gray-200 pb-2 pr-4 pt-4 text-start"
                     >
                       <div className="items-center justify-between text-xs text-gray-200">
                         {flexRender(
@@ -123,28 +131,25 @@ function ColumnsTable(props: { tableData: any }) {
             ))}
           </thead>
           <tbody>
-            {table
-              .getRowModel()
-              .rows.slice(0, 5)
-              .map((row) => {
-                return (
-                  <tr key={row.id}>
-                    {row.getVisibleCells().map((cell) => {
-                      return (
-                        <td
-                          key={cell.id}
-                          className="min-w-[150px] border-white/0 py-3  pr-4"
-                        >
-                          {flexRender(
-                            cell.column.columnDef.cell,
-                            cell.getContext()
-                          )}
-                        </td>
-                      );
-                    })}
-                  </tr>
-                );
-              })}
+            {table.getRowModel().rows.map((row) => {
+              return (
+                <tr key={row.id}>
+                  {row.getVisibleCells().map((cell) => {
+                    return (
+                      <td
+                        key={cell.id}
+                        className="min-w-[150px] border-white/0 py-3  pr-4"
+                      >
+                        {flexRender(
+                          cell.column.columnDef.cell,
+                          cell.getContext()
+                        )}
+                      </td>
+                    );
+                  })}
+                </tr>
+              );
+            })}
           </tbody>
         </table>
       </div>
