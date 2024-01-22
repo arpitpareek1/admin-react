@@ -30,20 +30,18 @@ export const SidebarLinks = (props: { routes: RoutesType[] }): JSX.Element => {
                 key={index}
               >
                 <span
-                  className={`${
-                    activeRoute(route.path) === true
-                      ? "font-bold text-brand-500 dark:text-white"
-                      : "font-medium text-gray-600"
-                  }`}
+                  className={`${activeRoute(route.path) === true
+                    ? "font-bold text-brand-500 dark:text-white"
+                    : "font-medium text-gray-600"
+                    }`}
                 >
                   {route.icon ? route.icon : <DashIcon />}{" "}
                 </span>
                 <p
-                  className={`leading-1 ml-4 flex ${
-                    activeRoute(route.path) === true
-                      ? "font-bold text-navy-700 dark:text-white"
-                      : "font-medium text-gray-600"
-                  }`}
+                  className={`leading-1 ml-4 flex ${activeRoute(route.path) === true
+                    ? "font-bold text-navy-700 dark:text-white"
+                    : "font-medium text-gray-600"
+                    }`}
                 >
                   {route.name}
                 </p>
@@ -53,12 +51,34 @@ export const SidebarLinks = (props: { routes: RoutesType[] }): JSX.Element => {
               ) : null}
             </div>
           </Link>
+
         );
       }
     });
   };
   // BRAND
-  return <>{createLinks(routes)}</>;
+  return <>
+    {createLinks(routes)}
+    <Link to={"/login"}>
+      <div className="relative mb-3 flex hover:cursor-pointer">
+        <li
+          className="my-[3px] flex cursor-pointer items-center px-8"
+
+        >
+          <span
+            className={"font-medium text-gray-600"}
+          >
+            {<DashIcon />}{" "}
+          </span>
+          <p
+            className={"leading-1 ml-4 flex font-medium text-gray-600"}
+          >
+            Logout
+          </p>
+        </li>
+      </div>
+    </Link>
+  </>;
 };
 
 export default SidebarLinks;

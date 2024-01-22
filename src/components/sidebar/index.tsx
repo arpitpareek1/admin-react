@@ -3,7 +3,6 @@
 import { HiX } from "react-icons/hi";
 import Links from "./components/Links";
 
-import SidebarCard from "components/sidebar/componentsrtl/SidebarCard";
 import routes from "routes";
 
 const Sidebar = (props: {
@@ -35,13 +34,6 @@ const Sidebar = (props: {
       <ul className="mb-auto pt-1">
         <Links routes={routes} />
       </ul>
-
-      {/* Free  Card */}
-      <div className="flex justify-center">
-        <SidebarCard />
-      </div>
-
-      {/* Nav item end */}
     </div>
   );
 };

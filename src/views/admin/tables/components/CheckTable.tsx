@@ -99,10 +99,10 @@ function CheckTable(props: { tableData: any }) {
           Check Table
         </div>
 
-        <CardMenu />
+        {/* <CardMenu /> */}
       </header>
 
-      <div className="mt-8 overflow-x-scroll xl:overflow-x-hidden">
+      <div className="mt-8 overflow-x-scroll xl:overflow-x-auto  customScrollbar">
         <table className="w-full">
           <thead>
             {table.getHeaderGroups().map((headerGroup) => (

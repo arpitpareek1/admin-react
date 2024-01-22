@@ -1,7 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
 import CardMenu from "components/card/CardMenu";
-import Checkbox from "components/checkbox";
 import Card from "components/card";
+import eye from "../../../../assets/svg/eye.svg"
 
 import {
   createColumnHelper,
@@ -11,16 +11,15 @@ import {
   SortingState,
   useReactTable,
 } from "@tanstack/react-table";
+import { UserInfo } from "types/interfaces";
+import { useNavigate } from "react-router-dom";
 
-type RowObj = {
-  name: [string, boolean];
-  progress: string;
-  quantity: number;
-  date: string;
-};
+function CheckTable(props: { tableData: any, len: number }) {
+  const { tableData, len } = props;
+  const [showAll, setShowAll] = useState(false)
 
-function CheckTable(props: { tableData: any }) {
-  const { tableData } = props;
+  const navigate = useNavigate()
+
   const [sorting, setSorting] = React.useState<SortingState>([]);
   let defaultData = tableData;
   const columns = [
@@ -31,22 +30,17 @@ function CheckTable(props: { tableData: any }) {
       ),
       cell: (info: any) => (
         <div className="flex items-center">
-          <Checkbox
-            defaultChecked={info.getValue()[1]}
-            colorScheme="brandScheme"
-            me="10px"
-          />
           <p className="ml-3 text-sm font-bold text-navy-700 dark:text-white">
-            {info.getValue()[0]}
+            {info.getValue()}
           </p>
         </div>
       ),
     }),
-    columnHelper.accessor("progress", {
-      id: "progress",
+    columnHelper.accessor("email", {
+      id: "email",
       header: () => (
         <p className="text-sm font-bold text-gray-600 dark:text-white">
-          PROGRESS
+          EMAIL
         </p>
       ),
       cell: (info) => (
@@ -55,30 +49,81 @@ function CheckTable(props: { tableData: any }) {
         </p>
       ),
     }),
-    columnHelper.accessor("quantity", {
-      id: "quantity",
+    columnHelper.accessor("money", {
+      id: "Money",
       header: () => (
-        <p className="text-sm font-bold text-gray-600 dark:text-white">
-          QUANTITY
-        </p>
+        <p className="text-sm font-bold text-gray-600 dark:text-white">MONEY</p>
       ),
-      cell: (info) => (
-        <p className="text-sm font-bold text-navy-700 dark:text-white">
-          {info.getValue()}
-        </p>
-      ),
+      cell: (info) => {
+        return (
+          <p className="text-sm font-bold text-navy-700 dark:text-white">
+            {info.getValue()}
+          </p>
+        )
+      },
     }),
-    columnHelper.accessor("date", {
-      id: "date",
+    columnHelper.accessor("phone", {
+      id: "Phone",
       header: () => (
-        <p className="text-sm font-bold text-gray-600 dark:text-white">DATE</p>
+        <p className="text-sm font-bold text-gray-600 dark:text-white">PHONE</p>
       ),
-      cell: (info) => (
-        <p className="text-sm font-bold text-navy-700 dark:text-white">
-          {info.getValue()}
-        </p>
-      ),
+      cell: (info) => {
+        return (
+          <p className="text-sm font-bold text-navy-700 dark:text-white">
+            {info.getValue()}
+          </p>
+        )
+      },
     }),
+    columnHelper.accessor("isRefered", {
+      id: "isRefered",
+      header: () => (
+        <p className="text-sm font-bold text-gray-600 dark:text-white">isReferred</p>
+      ),
+      cell: (info) => {
+        return (
+          <p className="text-sm font-bold text-navy-700 dark:text-white">
+            {info.getValue() ? "YES" : "NO"}
+          </p>
+        )
+      },
+    }),
+    columnHelper.accessor("lastRedeem", {
+      id: "lastRedded",
+      header: () => (
+        <p className="text-sm font-bold text-gray-600 dark:text-white">lastRedeem</p>
+      ),
+      cell: (info) => {
+        return (
+          <p className="text-sm font-bold text-navy-700 dark:text-white">
+            {info.getValue() === null ? "Never" : new Date(+(info.getValue())).toDateString()}
+          </p>
+        )
+      },
+    }),
+    columnHelper.accessor("_id", {
+      id: "WATCH",
+      header: () => (
+        <p className="text-sm font-bold text-gray-600 dark:text-white"></p>
+      ),
+      cell: (info) => {
+        return (
+          <p className="text-sm font-bold text-navy-700 dark:text-white">
+            <button onClick={() => {
+              console.log("jhsmdfhld");
+
+            }}>
+              <img src={eye} alt="Edit User" onClick={() => {
+                navigate("/ProfileOverview", {
+                  state: info.row.original
+                })
+              }} />
+            </button>
+          </p>
+        )
+      },
+    }),
+
   ]; // eslint-disable-next-line
   const [data, setData] = React.useState(() => [...defaultData]);
   const table = useReactTable({
@@ -96,13 +141,17 @@ function CheckTable(props: { tableData: any }) {
     <Card extra={"w-full h-full sm:overflow-auto px-6"}>
       <header className="relative flex items-center justify-between pt-4">
         <div className="text-xl font-bold text-navy-700 dark:text-white">
-          Check Table
+          Users Table
         </div>
-
-        <CardMenu />
+        {/* <CardMenu /> */}
+        {
+          len !== tableData.length && !(len > tableData.length) && (<button onClick={() => {
+            setShowAll((pre) => !pre)
+          }}>{showAll ? "show less" : "View All"}</button>)
+        }
       </header>
 
-      <div className="mt-8 overflow-x-scroll xl:overflow-x-hidden">
+      <div className="mt-8 overflow-x-scroll xl:overflow-x-auto  customScrollbar  customScrollbarcustomScrollbar">
         <table className="w-full">
           <thead>
             {table.getHeaderGroups().map((headerGroup) => (
@@ -134,7 +183,9 @@ function CheckTable(props: { tableData: any }) {
           <tbody>
             {table
               .getRowModel()
-              .rows.slice(0, 5)
+              .rows.slice(0, !showAll ? len : table
+                .getRowModel()
+                .rows.length)
               .map((row) => {
                 return (
                   <tr key={row.id}>
@@ -142,7 +193,7 @@ function CheckTable(props: { tableData: any }) {
                       return (
                         <td
                           key={cell.id}
-                          className="min-w-[150px] border-white/0 py-3  pr-4"
+                          className="min-w-[130px] border-white/0 py-3  pr-4"
                         >
                           {flexRender(
                             cell.column.columnDef.cell,
@@ -162,4 +213,4 @@ function CheckTable(props: { tableData: any }) {
 }
 
 export default CheckTable;
-const columnHelper = createColumnHelper<RowObj>();
+const columnHelper = createColumnHelper<UserInfo>();

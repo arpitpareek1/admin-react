@@ -9,7 +9,7 @@ function Notification() {
         <h4 className="text-xl font-bold text-navy-700 dark:text-white">
           Notifications
         </h4>
-        <CardMenu />
+        {/* <CardMenu /> */}
       </div>
       <div className="flex flex-col">
         {/* the custom checkbox desing added in src/index.js */}

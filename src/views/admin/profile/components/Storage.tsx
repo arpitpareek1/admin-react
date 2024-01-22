@@ -5,7 +5,7 @@ const Storage = () => {
   return (
     <Card extra={"w-full h-full p-4"}>
       <div className="ml-auto">
-        <CardMenu />
+        {/* <CardMenu /> */}
       </div>
       {/* Your storage */}
       <div className="mb-auto flex flex-col items-center justify-center">

@@ -1,90 +1,90 @@
-import MiniCalendar from "components/calendar/MiniCalendar";
-import WeeklyRevenue from "views/admin/default/components/WeeklyRevenue";
-import TotalSpent from "views/admin/default/components/TotalSpent";
-import PieChartCard from "views/admin/default/components/PieChartCard";
 import { IoMdHome } from "react-icons/io";
-import { IoDocuments } from "react-icons/io5";
 import { MdBarChart, MdDashboard } from "react-icons/md";
-
 import Widget from "components/widget/Widget";
 import CheckTable from "views/admin/default/components/CheckTable";
 import ComplexTable from "views/admin/default/components/ComplexTable";
-import DailyTraffic from "views/admin/default/components/DailyTraffic";
 import TaskCard from "views/admin/default/components/TaskCard";
-import tableDataCheck from "./variables/tableDataCheck";
-import tableDataComplex from "./variables/tableDataComplex";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import { backend_url } from "variables/helper";
+import { AllData } from "types/interfaces";
+import TransactionTable from "./components/TranscotionsTable";
+import Navbar from "components/navbar";
+import ProductsTable from "./components/productsTable";
+import "./../../../assets/css/App.css"
+import NewsTable from "./components/NewsTable";
+
 
 const Dashboard = () => {
+  const [data, setData] = useState<null | AllData>(null)
+
+  useEffect(() => {
+    const token = localStorage.getItem("user")
+    if (token !== null) {
+      axios.get(backend_url + "user/getAllData").then(({ data }) => {
+        console.log(data);
+        if (data && data.data && data.status) {
+          setData(data.data)
+        }
+      })
+    }
+  }, [])
+
+  const totalEarning = () => {
+    let earnings = 0
+    if (data && data.transactionsInfo && data.transactionsInfo.length) {
+      data.transactionsInfo.forEach((tra) => {
+        earnings += tra.amount
+      })
+    }
+    return earnings
+  }
+
   return (
-    <div>
-      {/* Card widget */}
-
-      <div className="mt-3 grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-3 3xl:grid-cols-6">
-        <Widget
-          icon={<MdBarChart className="h-7 w-7" />}
-          title={"Earnings"}
-          subtitle={"$340.5"}
-        />
-        <Widget
-          icon={<IoDocuments className="h-6 w-6" />}
-          title={"Spend this month"}
-          subtitle={"$642.39"}
-        />
-        <Widget
-          icon={<MdBarChart className="h-7 w-7" />}
-          title={"Sales"}
-          subtitle={"$574.34"}
-        />
-        <Widget
-          icon={<MdDashboard className="h-6 w-6" />}
-          title={"Your Balance"}
-          subtitle={"$1,000"}
-        />
-        <Widget
-          icon={<MdBarChart className="h-7 w-7" />}
-          title={"New Tasks"}
-          subtitle={"145"}
-        />
-        <Widget
-          icon={<IoMdHome className="h-6 w-6" />}
-          title={"Total Projects"}
-          subtitle={"$2433"}
-        />
-      </div>
-
-      {/* Charts */}
-
-      <div className="mt-5 grid grid-cols-1 gap-5 md:grid-cols-2">
-        <TotalSpent />
-        <WeeklyRevenue />
-      </div>
-
-      {/* Tables & Charts */}
-
-      <div className="mt-5 grid grid-cols-1 gap-5 xl:grid-cols-2">
-        {/* Check Table */}
+    <div className="flex h-full w-full">
+      <div className="h-full w-full bg-lightPrimary dark:!bg-navy-900 ">
         <div>
-          <CheckTable tableData={tableDataCheck} />
-        </div>
-
-        {/* Traffic chart & Pie Chart */}
-
-        <div className="grid grid-cols-1 gap-5 rounded-[20px] md:grid-cols-2">
-          <DailyTraffic />
-          <PieChartCard />
-        </div>
-
-        {/* Complex Table , Task & Calendar */}
-
-        <ComplexTable tableData={tableDataComplex} />
-
-        {/* Task chart & Calendar */}
-
-        <div className="grid grid-cols-1 gap-5 rounded-[20px] md:grid-cols-2">
-          <TaskCard />
-          <div className="grid grid-cols-1 rounded-[20px]">
-            <MiniCalendar />
-          </div>
+          <Navbar
+            brandText={"My DashBoard"}
+          />
+          {data &&
+            <>
+              <div className="mt-6 grid grid-cols-1 ml-5 mr-5 mt-10 gap-5 md:grid-cols-2 lg:grid-cols-2 2xl:grid-cols-2 3xl:grid-cols-4">
+                <Widget
+                  icon={<IoMdHome className="h-7 w-7" />}
+                  title={"All User"}
+                  subtitle={data.userInfo.length + ""}
+                />
+                <Widget
+                  icon={<MdBarChart className="h-6 w-6" />}
+                  title={"All withdrawal Requests"}
+                  subtitle={data.withdrawalInfo.length + ""}
+                />
+                <Widget
+                  icon={<MdDashboard className="h-6 w-6" />}
+                  title={"All Transactions "}
+                  subtitle={data.transactionsInfo.length + ""}
+                />
+                <Widget
+                  icon={<MdDashboard className="h-6 w-6" />}
+                  title={"Total Earning"}
+                  subtitle={totalEarning() + ""}
+                />
+              </div>
+              <div className="grid h-full grid-cols-1 gap-5 lg:!grid-cols-12 ml-5 mr-5 mb-10">
+                <div className="col-span-12 mt-4 lg:col-span-12 lg:mb-0 3xl:col-span-6" style={{ height: 'max-content' }}>
+                  <CheckTable tableData={data.userInfo} len={4} /><br />
+                  <TransactionTable tableData={data.transactionsInfo} userData={data.userInfo} len={4} /><br />
+                  <ComplexTable tableData={data.withdrawalInfo} userData={data.userInfo} len={4} />
+                </div>
+                <div className="col-span-12 mt-4 lg:col-span-12 lg:mb-0 3xl:col-span-6" style={{ height: 'max-content' }}>
+                  <ProductsTable tableData={data.products} len={4} /><br />
+                  <NewsTable tableData={data.news} len={4} /><br />
+                  <TaskCard settings={data.settings} />
+                </div>
+              </div>
+            </>
+          }
         </div>
       </div>
     </div>
