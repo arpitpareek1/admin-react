@@ -18,7 +18,7 @@ const App = () => {
     console.log("useEffect");
     const token = localStorage.getItem("user")
     if (token === null && !window.location.pathname.includes("login")) {
-      navigate("/")
+      navigate("/login")
     } else {
       if (window.location.pathname.includes("login")) {
         navigate("/admin")

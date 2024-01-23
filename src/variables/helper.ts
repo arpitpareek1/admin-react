@@ -4,7 +4,7 @@ import EventEmitter from "events";
 
 export const eventEmitter = new EventEmitter();
 
-export const backend_url = "http://localhost:8080/api/v1/";
+export const backend_url = "https://ybt689k9fa.execute-api.ap-south-1.amazonaws.com/development/api/v1/";
 
 
 export const EncryptionKey = "qwertyuioplkjhgfdsa"
