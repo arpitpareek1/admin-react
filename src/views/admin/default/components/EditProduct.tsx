@@ -14,9 +14,10 @@ const ProductEditPage: React.FC = () => {
     const location = useLocation();
     const navigate = useNavigate()
     const userData = location.state as Products;
-
+    const [isHot, setIsHot] = useState<boolean>(false);
     useEffect(() => {
         setProduct(userData);
+        setIsHot(userData.isHot || false);
     }, [userData]);
 
     const handleInputChange = (
@@ -27,6 +28,16 @@ const ProductEditPage: React.FC = () => {
             ...prevProduct,
             [name]: value,
         }));
+    };
+    const handleIsHotChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        // Update the isHot state when the checkbox changes
+        setIsHot(e.target.checked);
+        handleInputChange({
+            target: {
+                name: "isHot",
+                value: e.target.checked
+            }
+        } as any)
     };
 
     const handleSave = () => {
@@ -95,6 +106,16 @@ const ProductEditPage: React.FC = () => {
                                         value={product.price}
                                         onChange={handleInputChange}
                                         className="mt-1 p-2 w-full border rounded-md"
+                                    />
+                                </label>
+                                <label className="block">
+                                    <span className="text-gray-700">Is Hot:</span>
+                                    <input
+                                        type="checkbox"
+                                        name="isHot"
+                                        checked={isHot}
+                                        onChange={handleIsHotChange}
+                                        className="mt-1 p-2"
                                     />
                                 </label>
                                 <label className="block">

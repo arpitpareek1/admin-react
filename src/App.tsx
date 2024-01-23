@@ -15,16 +15,29 @@ const App = () => {
   const navigate = useNavigate()
 
   useEffect(() => {
-    console.log("useEffect");
-    const token = localStorage.getItem("user")
-    if (token === null && !window.location.pathname.includes("login")) {
-      navigate("/login")
+    // Check if the user is not on the "welcome" or "login" page
+    if (!window.location.pathname.includes("welcome") && !window.location.pathname.includes("login")) {
+      const token = localStorage.getItem("user");
+
+      // If the user has no token, redirect to the login page
+      if (!token) {
+        navigate("/login");
+      } else {
+        // If the user has a token, redirect to the admin page
+        navigate("/admin");
+      }
     } else {
+      // If the user is on the "login" page, redirect to the admin page if a token is present
       if (window.location.pathname.includes("login")) {
-        navigate("/admin")
+        const token = localStorage.getItem("user");
+        if (token) {
+          navigate("/admin");
+        }
       }
     }
-  }, [navigate])
+  }, []);
+
+
 
   const NotAvailable = () => (
     <div className="text-center mt-10">

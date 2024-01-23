@@ -79,6 +79,19 @@ export default function ProductsTable(props: { tableData: any, len: number }) {
                 </p>
             ),
         }),
+        columnHelper.accessor("isHot", {
+            id: "isHot",
+            header: () => (
+                <p className="text-sm font-bold text-gray-600 dark:text-white">
+                    IsHot   
+                </p>
+            ),
+            cell: (info) => (
+                <p className="text-sm font-bold text-navy-700 dark:text-white">
+                    {info.getValue() ?"Yes":"No"}
+                </p>
+            ),
+        }),
         columnHelper.accessor("desc", {
             id: "desc",
             header: () => (

@@ -71,6 +71,7 @@ export interface Products {
   validity: number
   purchaseLimit: number
   desc: string
+  isHot: boolean
   __v: number
 }
 
