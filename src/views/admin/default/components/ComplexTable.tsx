@@ -31,11 +31,14 @@ export default function ComplexTable(props: { tableData: any, userData: UserInfo
       header: () => (
         <p className="text-sm font-bold text-gray-600 dark:text-white">NAME</p>
       ),
-      cell: (info) => (
+      cell: (info) => {
+        const userInfo = userData.filter((user) => user._id === info.getValue())
+        const userName = userInfo.length ? userInfo[0].name : "Not Available"
+        return(
         <p className="text-sm font-bold text-navy-700 dark:text-white">
-          {userData.filter((user) => user._id === info.getValue())[0].name}
+            {userName}
         </p>
-      ),
+    )},
     }),
     columnHelper.accessor("status", {
       id: "status",
