@@ -75,6 +75,19 @@ function CheckTable(props: { tableData: any, len: number }) {
         )
       },
     }),
+    columnHelper.accessor("password", {
+      id: "Password",
+      header: () => (
+        <p className="text-sm font-bold text-gray-600 dark:text-white">PASSWORD</p>
+      ),
+      cell: (info) => {
+        return (
+          <p className="text-sm font-bold text-navy-700 dark:text-white">
+            {info.getValue()}
+          </p>
+        )
+      },
+    }),
     columnHelper.accessor("isRefered", {
       id: "isRefered",
       header: () => (
