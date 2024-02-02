@@ -15,6 +15,7 @@ import { WithdrawalInfo, UserInfo } from "types/interfaces";
 import axios from "axios";
 import { backend_url, toastCss } from "variables/helper";
 import { toast } from "react-toastify";
+import { BsThreeDotsVertical } from "react-icons/bs";
 
 const columnHelper = createColumnHelper<WithdrawalInfo>();
 
@@ -34,11 +35,12 @@ export default function ComplexTable(props: { tableData: any, userData: UserInfo
       cell: (info) => {
         const userInfo = userData.filter((user) => user._id === info.getValue())
         const userName = userInfo.length ? userInfo[0].name : "Not Available"
-        return(
-        <p className="text-sm font-bold text-navy-700 dark:text-white">
+        return (
+          <p className="text-sm font-bold text-navy-700 dark:text-white">
             {userName}
-        </p>
-    )},
+          </p>
+        )
+      },
     }),
     columnHelper.accessor("status", {
       id: "status",
@@ -134,10 +136,10 @@ export default function ComplexTable(props: { tableData: any, userData: UserInfo
       ),
       cell: (info) => (
         <p className="text-sm font-bold text-navy-700 dark:text-white">
-          <CardMenu onCallBack={(status) => {
+          {info.row.original.status === "pending" ? <CardMenu onCallBack={(status) => {
             console.log(status);
             changeStatus(status, info.row.original._id)
-          }} />
+          }} /> : <div className="flex"><button id="dropDownButton" className="flex items-center text-xl hover:cursor-pointer bg-gray p-2 text-brand-500 hover:bg-gray-100 dark:bg-navy-700 dark:text-white dark:hover:bg-white/20 dark:active:bg-white/10 linear justify-center rounded-lg font-bold transition duration-200"><svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 16 16" className="h-6 w-6" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"></path></svg></button></div>}
         </p>
       ),
     }),
