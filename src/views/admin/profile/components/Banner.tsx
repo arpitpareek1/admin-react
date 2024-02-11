@@ -1,4 +1,4 @@
-import avatar from "assets/img/avatars/avatar11.png";
+import avatar from "assets/img/avatars/avatar4.png";
 import banner from "assets/img/profile/banner.png";
 import Card from "components/card";
 import { UserInfo } from "types/interfaces";

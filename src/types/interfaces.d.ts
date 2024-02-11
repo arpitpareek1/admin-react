@@ -29,6 +29,7 @@ export interface UserInfo {
   password: string
   phone: string
   money: number
+  rechargePoints: number
   role: number
   approved: boolean
   referralCode: string
@@ -55,9 +56,11 @@ export interface TransactionsInfo {
   amount: number
   product_name: string
   transaction_id: string
+  payment_method: string
+  status: string
+  __v: number
   createdAt: string
   updatedAt: string
-  __v: number
 }
 
 

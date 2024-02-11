@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import CardMenu from "components/card/CardMenu";
 import Card from "components/card";
 import { MdCancel, MdCheckCircle, MdOutlineError } from "react-icons/md";
@@ -33,6 +33,8 @@ export default function ComplexTable(props: { tableData: any, userData: UserInfo
         <p className="text-sm font-bold text-gray-600 dark:text-white">NAME</p>
       ),
       cell: (info) => {
+        console.log("info.getValue()", info.getValue());
+
         const userInfo = userData.filter((user) => user._id === info.getValue())
         const userName = userInfo.length ? userInfo[0].name : "Not Available"
         return (
@@ -79,7 +81,7 @@ export default function ComplexTable(props: { tableData: any, userData: UserInfo
       id: "cardInfo",
       header: () => (
         <p className="text-sm font-bold text-gray-600 dark:text-white">
-          cardInfo
+          Bank Account No.
         </p>
       ),
       cell: (info) => (
@@ -137,15 +139,17 @@ export default function ComplexTable(props: { tableData: any, userData: UserInfo
       cell: (info) => (
         <p className="text-sm font-bold text-navy-700 dark:text-white">
           {info.row.original.status === "pending" ? <CardMenu onCallBack={(status) => {
-            console.log(status);
             changeStatus(status, info.row.original._id)
-          }} /> : <div className="flex"><button id="dropDownButton" className="flex items-center text-xl hover:cursor-pointer bg-gray p-2 text-brand-500 hover:bg-gray-100 dark:bg-navy-700 dark:text-white dark:hover:bg-white/20 dark:active:bg-white/10 linear justify-center rounded-lg font-bold transition duration-200"><svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 16 16" className="h-6 w-6" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"></path></svg></button></div>}
+          }} />
+            : <div className="flex"><button id="dropDownButton" className="flex items-center text-xl hover:cursor-pointer bg-gray p-2 text-brand-500 hover:bg-gray-100 dark:bg-navy-700 dark:text-white dark:hover:bg-white/20 dark:active:bg-white/10 linear justify-center rounded-lg font-bold transition duration-200"><svg stroke="currentColor" fill="currentColor" strokeWidth="0" viewBox="0 0 16 16" className="h-6 w-6" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"></path></svg></button></div>}
         </p>
       ),
     }),
   ];
 
   const [data, setData] = React.useState(() => [...defaultData]);
+  const [userSearch, setUserSearch] = useState("")
+
 
   const table = useReactTable({
     data,
@@ -174,21 +178,62 @@ export default function ComplexTable(props: { tableData: any, userData: UserInfo
 
   }
 
+  const inputRef = useRef<React.LegacyRef<HTMLInputElement> | null>(null)
+
+  const SearchBar = ({ searchCallback }: { searchCallback: (e: any) => void }) => {
+    return (
+      <>
+        <div className="bg-lightPrimary dark:bg-navy-900 p-4 rounded-lg mt-1 flex flex-col sm:flex-row sm:items-center">
+          <input
+            ref={inputRef as any}
+            type="text"
+            id="searchInput"
+            placeholder="Search users..."
+            className="flex-grow mb-2 sm:mb-0 sm:mr-2 py-2 px-4 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:border-indigo-500"
+            style={{ color: 'inherit' }} // Ensure text color inherits from parent
+          />
+          <button
+            onClick={() => {
+              if (inputRef) {
+                searchCallback((inputRef.current as any).value)
+              }
+            }}
+            className="py-2 px-4 mb-2 sm:mb-0 sm:mr-2 bg-indigo-500 text-white font-semibold rounded-md hover:bg-indigo-600 focus:outline-none focus:bg-indigo-600"
+          >
+            Search
+          </button>
+          {userSearch && (
+            <button
+              onClick={() => {
+                setUserSearch("")
+              }}
+              className="py-2 px-4 mb-2 sm:mb-0 bg-gray-300 text-gray-700 font-semibold rounded-md hover:bg-gray-400 focus:outline-none focus:bg-gray-400"
+            >
+              Remove Filter
+            </button>
+          )}
+        </div>
+      </>
+
+    )
+  }
+
   return (
     <Card extra={"w-full h-full px-6 pb-6 sm:overflow-x-auto"}>
       <div className="relative flex items-center justify-between pt-4">
         <div className="text-xl font-bold text-navy-700 dark:text-white">
           WithDraw Requests
         </div>
-        {/* <CardMenu /> */}
         {
           len !== tableData.length && !(len > tableData.length) && (<button onClick={() => {
             setShowAll((pre) => !pre)
           }}>{showAll ? "show less" : "View All"}</button>)
         }
-
       </div>
-
+      <SearchBar searchCallback={(e) => {
+        console.log(e);
+        setUserSearch(e)
+      }} />
       <div className="mt-8 overflow-x-scroll xl:overflow-x-auto  customScrollbar">
         <table className="w-full">
           <thead>
@@ -221,7 +266,16 @@ export default function ComplexTable(props: { tableData: any, userData: UserInfo
           <tbody>
             {table
               .getRowModel()
-              .rows.slice(0, !showAll ? len : table
+              .rows.filter(row => {
+                // console.log(row.original.name);
+                const userInfo = userData.filter((user) => user._id === row.original.userId)
+                console.log("userInfo", userInfo);
+
+                const userName = userInfo.length ? userInfo[0].name : "Not Available"
+                console.log(userName);
+                return (userName).toLocaleLowerCase().includes(userSearch.toLocaleLowerCase())
+              })
+              .slice(0, !showAll ? len : table
                 .getRowModel()
                 .rows.length)
               .map((row) => {

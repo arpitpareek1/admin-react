@@ -8,7 +8,7 @@ const TaskCard = ({ settings }: { settings: Settings[] }) => {
   const navigate = useNavigate()
 
   return (
-    <Card extra="pb-7 p-[20px]">
+    <Card extra="pb-7 p-[20px] mt-6">
       <div className="relative flex flex-row justify-between">
         <div className="flex items-center">
           <div className="flex h-9 w-9 items-center justify-center rounded-full bg-indigo-100 dark:bg-indigo-100 dark:bg-white/5">

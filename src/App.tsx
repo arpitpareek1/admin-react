@@ -8,6 +8,7 @@ import ProfileOverview from "views/admin/profile";
 import ProductEditPage from "views/admin/default/components/EditProduct";
 import NewsEditPage from "views/admin/default/components/editNews";
 import SettingsEdit from "views/admin/default/components/SettingsEdit";
+import UserEditPage from "views/admin/default/components/userEditPage";
 
 
 const App = () => {
@@ -60,6 +61,7 @@ const App = () => {
         <Route path="ProfileOverview" element={<ProfileOverview />} />
         <Route path="NewsEditPage" element={<NewsEditPage />} />
         <Route path="EditProduct" element={<ProductEditPage />} />
+        <Route path="UserEditPage" element={<UserEditPage />} />
         <Route path="login" element={<SignIn />} />
         <Route path="SettingsEdit" element={<SettingsEdit />} />
         <Route path="*" element={<NotAvailable />} />
