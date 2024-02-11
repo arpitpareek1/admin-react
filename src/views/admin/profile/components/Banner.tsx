@@ -3,7 +3,7 @@ import banner from "assets/img/profile/banner.png";
 import Card from "components/card";
 import { UserInfo } from "types/interfaces";
 
-const Banner = ({ userData, allTraLen, allWithdrawLen }: { userData: UserInfo, allTraLen: number, allWithdrawLen: number }) => {
+const Banner = ({ userData, allTraLen, allWithdrawLen, rechargePoints }: { userData: UserInfo, allTraLen: number, allWithdrawLen: number, rechargePoints: number }) => {
 
   return (
     <Card extra={"items-center w-full h-full p-[16px] bg-cover"}>
@@ -36,6 +36,12 @@ const Banner = ({ userData, allTraLen, allWithdrawLen }: { userData: UserInfo, a
             {allWithdrawLen}
           </p>
           <p className="text-sm font-normal text-gray-600">All Withdraw Requests</p>
+        </div>
+        <div className="flex flex-col items-center justify-center">
+          <p className="text-2xl font-bold text-navy-700 dark:text-white">
+            {rechargePoints}
+          </p>
+          <p className="text-sm font-normal text-gray-600">Deposit points</p>
         </div>
       </div>
     </Card>
