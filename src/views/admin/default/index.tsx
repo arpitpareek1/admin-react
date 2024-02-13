@@ -93,7 +93,7 @@ const Dashboard = () => {
                 />
                 <Widget
                   icon={<MdDashboard className="h-6 w-6" />}
-                  title={"Total UPI Transactions"}
+                  title={"Daily UPI Transactions"}
                   subtitle={getDailyUPI() + ""}
                 />
               </div>
