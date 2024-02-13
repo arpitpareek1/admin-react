@@ -1,4 +1,4 @@
-import { IoMdHome, IoMdNotificationsOutline } from "react-icons/io";
+import { IoMdHome } from "react-icons/io";
 import { MdBarChart, MdDashboard } from "react-icons/md";
 import Widget from "components/widget/Widget";
 import CheckTable from "views/admin/default/components/CheckTable";
@@ -14,9 +14,6 @@ import ProductsTable from "./components/productsTable";
 import "./../../../assets/css/App.css"
 import NewsTable from "./components/NewsTable";
 import { useNavigate } from "react-router-dom";
-import { FiAlignJustify, FiSearch } from "react-icons/fi";
-import Dropdown from "components/dropdown";
-import { BsArrowBarUp } from "react-icons/bs";
 
 
 const Dashboard = () => {
@@ -45,6 +42,18 @@ const Dashboard = () => {
     if (data && data.transactionsInfo && data.transactionsInfo.length) {
       data.transactionsInfo.forEach((tra) => {
         if (tra.payment_method === "UPI") {
+          upi += Number(tra.amount)
+        }
+      })
+    }
+    return upi
+  }
+
+  const getDailyUPI = () => {
+    let upi = 0
+    if (data && data.transactionsInfo && data.transactionsInfo.length) {
+      data.transactionsInfo.forEach((tra) => {
+        if (tra.payment_method === "UPI" && new Date(tra.createdAt).getDate() === new Date().getDate()) {
           upi += Number(tra.amount)
         }
       })
@@ -81,6 +90,11 @@ const Dashboard = () => {
                   icon={<MdDashboard className="h-6 w-6" />}
                   title={"Total UPI Transactions"}
                   subtitle={getTotalUPI() + ""}
+                />
+                <Widget
+                  icon={<MdDashboard className="h-6 w-6" />}
+                  title={"Total UPI Transactions"}
+                  subtitle={getDailyUPI() + ""}
                 />
               </div>
               <div className="grid h-full grid-cols-1 gap-5 lg:!grid-cols-12 ml-5 mr-5 mb-10">
