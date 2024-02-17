@@ -41,7 +41,7 @@ const Dashboard = () => {
     let upi = 0
     if (data && data.transactionsInfo && data.transactionsInfo.length) {
       data.transactionsInfo.forEach((tra) => {
-        if (tra.payment_method === "UPI") {
+        if ((tra.product_name === "GETTING_SPINNER_CHANCES" && tra.payment_method === "upi" || tra.product_name === "ADDED_TO_WALLET")) {
           upi += Number(tra.amount)
         }
       })
@@ -88,12 +88,12 @@ const Dashboard = () => {
                 />
                 <Widget
                   icon={<MdDashboard className="h-6 w-6" />}
-                  title={"Total UPI Transactions"}
+                  title={"Total UPI Transactions Amount"}
                   subtitle={getTotalUPI() + ""}
                 />
                 <Widget
                   icon={<MdDashboard className="h-6 w-6" />}
-                  title={"Daily UPI Transactions"}
+                  title={"Daily UPI Transactions Amount"}
                   subtitle={getDailyUPI() + ""}
                 />
               </div>
