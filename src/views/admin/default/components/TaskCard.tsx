@@ -6,6 +6,15 @@ import { useNavigate } from "react-router-dom";
 const TaskCard = ({ settings }: { settings: Settings[] }) => {
   console.log(settings);
   const navigate = useNavigate()
+  const weekdays = [
+    { id: 1, name: 'Monday' },
+    { id: 2, name: 'Tuesday' },
+    { id: 3, name: 'Wednesday' },
+    { id: 4, name: 'Thursday' },
+    { id: 5, name: 'Friday' },
+    { id: 6, name: 'Saturday' },
+    { id: 7, name: 'Sunday' },
+];
 
   return (
     <Card extra="pb-7 p-[20px] mt-6">
@@ -24,7 +33,10 @@ const TaskCard = ({ settings }: { settings: Settings[] }) => {
           <div className="flex items-center justify-between p-4 border-b" key={index}>
             <div>
               <p className="text-lg font-semibold">{setting.key}</p>
-              <p className="text-gray-500">{setting.value}</p>
+              {
+               setting.key !=="withdraw_days" ?  <p className="text-gray-500">{setting.value}</p> : <p className="text-gray-500">{(JSON.parse(setting.value) as number[]).map((v)=>weekdays[v].name).join(", ")}</p>
+
+              }
             </div>
             <h4 className="font-bold mt-2 text-navy-700 dark:text-white" onClick={() => {
               navigate("/SettingsEdit", {
