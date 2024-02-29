@@ -34,7 +34,7 @@ const TaskCard = ({ settings }: { settings: Settings[] }) => {
             <div>
               <p className="text-lg font-semibold">{setting.key}</p>
               {
-               setting.key !=="withdraw_days" ?  <p className="text-gray-500">{setting.value}</p> : <p className="text-gray-500">{(JSON.parse(setting.value) as number[]).map((v)=>weekdays[v].name).join(", ")}</p>
+               setting.key !=="withdraw_days" ?  <p className="text-gray-500">{setting.value}</p> : <p className="text-gray-500">{(JSON.parse(setting.value) as number[]).map((v) => weekdays.filter((p)=>p.id===v)[0].name).join(", ")}</p>
 
               }
             </div>
